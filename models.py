@@ -66,6 +66,24 @@ class Session(models.Model):
     hours = fields.Float(string="Duration in hours",
                          compute='_get_hours', inverse='_set_hours')
 
+    state = fields.Selection([
+         ('draft', "Draft"),
+         ('confirmed', "Confirmed"),
+         ('done', "Done"),
+    ])
+
+    @api.one
+    def action_draft(self):
+        self.state = 'draft'
+
+    @api.one
+    def action_confirm(self):
+        self.state = 'confirmed'
+
+    @api.one
+    def action_done(self):
+        self.state = 'done'
+
     @api.one
     @api.depends('seats', 'attendee_ids')
     def _taken_seats(self):
